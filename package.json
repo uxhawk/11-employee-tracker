@@ -1,0 +1,23 @@
+{
+  "name": "gw-hmwk-11-employee-tracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uxhawk/gw-hmwk-11-employee-tracker.git"
+  },
+  "author": "David Hawkins",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/uxhawk/gw-hmwk-11-employee-tracker/issues"
+  },
+  "homepage": "https://github.com/uxhawk/gw-hmwk-11-employee-tracker#readme",
+  "dependencies": {
+    "inquirer": "^7.1.0",
+    "mysql": "^2.18.1"
+  }
+}
