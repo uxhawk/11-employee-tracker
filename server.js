@@ -2,6 +2,9 @@ const inquirer = require("inquirer");
 const mysql = require("mysql");
 const figlet = require("figlet");
 const chalk = require("chalk");
+const {
+    table
+} = require("table");
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -17,14 +20,9 @@ connection.connect(err => {
         throw err;
     }
 
-    console.log(chalk.green(figlet.textSync('Connected to DB!')));
+    console.log(chalk.green(figlet.textSync(`Employee\nManager`)));
     actionPrompt();
 });
-
-
-function adios() {
-    console.log(chalk.red(figlet.textSync('Adios!')));
-}
 
 function actionPrompt() {
     inquirer.prompt({
@@ -32,23 +30,36 @@ function actionPrompt() {
         type: "list",
         message: "What would you like to do?",
         choices: [
-            "Add content",
-            "View content",
-            "Edit content",
+            "View All Employees",
+            "View All Departments",
+            "View All Employees By Department",
+            "Add Employees, Deparments, and Roles",
+            "Update Employee Role",
+            "BONUS -- Update Employee Manager",
+            "BONUS -- View All Employees By Manager",
+            "BONUS -- Remove Employee/roles/department",
             "Exit"
         ]
     }).then(answer => {
         switch (answer.action) {
-            case "Add content":
+            case "View All Employees":
+                viewEmployees();
+                break;
+
+            case "View All Employees By Department":
+                viewEmployeesByDept();
+                break;
+
+            case "View All Departments":
+                viewDepartments();
+                break;
+
+            case "Add Employees, Deparments, and Roles":
                 addPrompt();
                 break;
 
-            case "View content":
-                viewPrompt();
-                break;
-
-            case "Edit content":
-                editPrompt();
+            case "Update Employee Role":
+                updatePrompt();
                 break;
 
             case "Exit":
@@ -93,40 +104,56 @@ function addPrompt() {
     });
 }
 
-function viewPrompt() {
-    inquirer.prompt({
-        name: "view",
-        type: "list",
-        message: "What would you like to view?",
-        choices: [
-            "Department",
-            "Role",
-            "Employee",
-            "Cancel"
-        ]
-    }).then(answer => {
-        switch (answer.view) {
-            case "Department":
-                viewDepartment();
-                break;
 
-            case "Role":
-                viewRole();
-                break;
 
-            case "Employee":
-                viewEmployee();
-                break;
+function viewEmployees() {
+    let employeeData = [
+        ["Last Name", "First Name"]
+    ];
 
-            case "Cancel":
-            default:
-                actionPrompt();
-                break;
+    const query = "SELECT * FROM employee";
+    connection.query(query, (err, data) => {
+        if (err) {
+            console.log(err);
+            throw err;
         }
+        data.forEach(row => {
+            let details = [];
+            details.push(row.last_name);
+            details.push(row.first_name);
+            employeeData.push(details);
+        });
+
+        console.log(chalk.cyan(figlet.textSync(`\nAll Employees`, {
+            font: "mini"
+        })));
+        printTable(employeeData);
+        actionPrompt();
     });
 }
 
-function editPrompt() {
+function viewDepartments() {
+
+}
+
+function printTable(tableContent) {
+    let output;
+    output = table(tableContent);
+    console.log(output);
+}
+
+
+
+
+
+
+
+
+function viewEmployeesByDept() {
+
+}
+
+function updatePrompt() {
     inquirer.prompt({
         name: "update",
         type: "list",
@@ -157,4 +184,8 @@ function editPrompt() {
                 break;
         }
     });
+}
+
+function adios() {
+    console.log(chalk.red(figlet.textSync('Adios!')));
 }
