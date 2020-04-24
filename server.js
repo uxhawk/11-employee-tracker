@@ -1,5 +1,6 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql");
+const figlet = require("figlet");
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -14,9 +15,32 @@ connection.connect(err => {
         console.log(err);
         throw err;
     }
-    console.log("Successfully connected");
-    actionPrompt();
+
+    figlet('Connected to DB!', function(err, data) {
+        if (err) {
+            console.log('Something went wrong...');
+            console.dir(err);
+            return;
+        }
+        printConnection(data);
+    });
 });
+
+function printConnection(str) {
+    console.log(`\n${str}\n\n`);
+    actionPrompt();
+}
+
+function adios() {
+    figlet('Adios!', function(err, data) {
+        if (err) {
+            console.log('Something went wrong...');
+            console.dir(err);
+            return;
+        }
+        console.log(data);
+    });
+}
 
 function actionPrompt() {
     inquirer.prompt({
@@ -45,6 +69,7 @@ function actionPrompt() {
 
             case "Exit":
             default:
+                adios();
                 connection.end();
                 break;
         }
