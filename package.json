@@ -18,6 +18,7 @@
   "homepage": "https://github.com/uxhawk/gw-hmwk-11-employee-tracker#readme",
   "dependencies": {
     "ascii-art": "^2.5.0",
+    "chalk": "^4.0.0",
     "figlet": "^1.3.0",
     "inquirer": "^7.1.0",
     "mysql": "^2.18.1",

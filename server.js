@@ -1,6 +1,7 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql");
 const figlet = require("figlet");
+const chalk = require("chalk");
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -16,30 +17,13 @@ connection.connect(err => {
         throw err;
     }
 
-    figlet('Connected to DB!', function(err, data) {
-        if (err) {
-            console.log('Something went wrong...');
-            console.dir(err);
-            return;
-        }
-        printConnection(data);
-    });
+    console.log(chalk.green(figlet.textSync('Connected to DB!')));
+    actionPrompt();
 });
 
-function printConnection(str) {
-    console.log(`\n${str}\n\n`);
-    actionPrompt();
-}
 
 function adios() {
-    figlet('Adios!', function(err, data) {
-        if (err) {
-            console.log('Something went wrong...');
-            console.dir(err);
-            return;
-        }
-        console.log(data);
-    });
+    console.log(chalk.red(figlet.textSync('Adios!')));
 }
 
 function actionPrompt() {
