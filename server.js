@@ -133,7 +133,29 @@ function viewEmployees() {
 }
 
 function viewDepartments() {
+    let departmentData = [
+        ["Department Name"]
+    ];
 
+    const query = "SELECT * FROM department";
+    connection.query(query, (err, data) => {
+        if (err) {
+            console.log(err);
+            throw err;
+        }
+        data.forEach(row => {
+            let details = [];
+            details.push(row.dept_name);
+            departmentData.push(details);
+        });
+
+        console.log(chalk.cyan(figlet.textSync(`\nAll Departments`, {
+            font: "mini"
+        })));
+
+        printTable(departmentData);
+        actionPrompt();
+    });
 }
 
 function printTable(tableContent) {
