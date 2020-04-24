@@ -50,3 +50,102 @@ function actionPrompt() {
         }
     });
 }
+
+function addPrompt() {
+    inquirer.prompt({
+        name: "add",
+        type: "list",
+        message: "What would you like to add?",
+        choices: [
+            "Department",
+            "Role",
+            "Employee",
+            "Cancel"
+        ]
+    }).then(answer => {
+        switch (answer.add) {
+            case "Department":
+                addDepartment();
+                break;
+
+            case "Role":
+                addRole();
+                break;
+
+            case "Employee":
+                addEmployee();
+                break;
+
+            case "Cancel":
+            default:
+                actionPrompt();
+                break;
+        }
+    });
+}
+
+function viewPrompt() {
+    inquirer.prompt({
+        name: "view",
+        type: "list",
+        message: "What would you like to view?",
+        choices: [
+            "Department",
+            "Role",
+            "Employee",
+            "Cancel"
+        ]
+    }).then(answer => {
+        switch (answer.view) {
+            case "Department":
+                viewDepartment();
+                break;
+
+            case "Role":
+                viewRole();
+                break;
+
+            case "Employee":
+                viewEmployee();
+                break;
+
+            case "Cancel":
+            default:
+                actionPrompt();
+                break;
+        }
+    });
+}
+
+function editPrompt() {
+    inquirer.prompt({
+        name: "update",
+        type: "list",
+        message: "What would you like to update?",
+        choices: [
+            "Department",
+            "Role",
+            "Employee",
+            "Cancel"
+        ]
+    }).then(answer => {
+        switch (answer.update) {
+            case "Department":
+                updateDepartment();
+                break;
+
+            case "Role":
+                updateRole();
+                break;
+
+            case "Employee":
+                updateEmployee();
+                break;
+
+            case "Cancel":
+            default:
+                actionPrompt();
+                break;
+        }
+    });
+}
