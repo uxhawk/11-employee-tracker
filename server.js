@@ -35,6 +35,7 @@ function actionPrompt() {
         choices: [
             "View All Employees",
             "View All Departments",
+            "View All Roles",
             "View All Employees By Department",
             "Add Employees, Deparments, and Roles",
             "Update Employee Role",
@@ -59,6 +60,10 @@ function actionPrompt() {
 
             case "Add Employees, Deparments, and Roles":
                 addPrompt();
+                break;
+
+            case "View All Roles":
+                viewRoles();
                 break;
 
             case "Update Employee Role":
@@ -104,6 +109,34 @@ function addPrompt() {
                 actionPrompt();
                 break;
         }
+    });
+}
+
+async function viewRoles() {
+    let rolesArr = [];
+
+    const query = `
+    SELECT role.title, role.salary, department.dept_name
+	    FROM role
+		    LEFT JOIN department on role.department_id = department.id;`;
+    connection.query(query, (err, data) => {
+        if (err) {
+            console.log(err);
+            throw err;
+        }
+        data.forEach(row => {
+            let details = [];
+            details.push(row.dept_name);
+            details.push(row.title);
+            details.push(row.salary);
+            rolesArr.push(details);
+        });
+
+        console.log(chalk.cyan(figlet.textSync(`\nAll Roles`, {
+            font: "mini"
+        })));
+        console.table([chalk.magenta("Department"), chalk.magenta("Title"), chalk.magenta("Salary")], rolesArr);
+        actionPrompt();
     });
 }
 
@@ -225,18 +258,22 @@ function viewDepartments() {
     SELECT department.dept_name
         FROM department
             LEFT JOIN role on role.id = department.id;`;
+
     connection.query(query, (err, data) => {
         if (err) {
             console.log(err);
             throw err;
         }
         data.forEach(row => {
-            departmentArr.push(row.dept_name);
+            let tempDetails = [];
+            tempDetails.push(row.dept_name)
+            departmentArr.push(tempDetails);
         });
 
         console.log(chalk.cyan(figlet.textSync(`\nAll Departments`, {
             font: "mini"
         })));
+
         console.table([chalk.magenta("Department")], departmentArr);
         actionPrompt();
     });
