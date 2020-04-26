@@ -143,11 +143,12 @@ function viewEmployees() {
 }
 
 function viewDepartments() {
-    let departmentData = [
-        ["Department Name"]
-    ];
+    let departmentArr = [];
 
-    const query = "SELECT * FROM department";
+    const query = `
+    SELECT department.dept_name
+        FROM department
+            LEFT JOIN role on role.id = department.id;`;
     connection.query(query, (err, data) => {
         if (err) {
             console.log(err);
@@ -156,14 +157,13 @@ function viewDepartments() {
         data.forEach(row => {
             let details = [];
             details.push(row.dept_name);
-            departmentData.push(details);
+            departmentArr.push(details);
         });
 
         console.log(chalk.cyan(figlet.textSync(`\nAll Departments`, {
             font: "mini"
         })));
-
-        printTable(departmentData);
+        console.table([chalk.magenta("Department")], departmentArr);
         actionPrompt();
     });
 }
