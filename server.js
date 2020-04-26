@@ -106,8 +106,6 @@ function addPrompt() {
     });
 }
 
-
-
 function viewEmployees() {
     let employeesArr = [];
 
@@ -168,14 +166,29 @@ function viewDepartments() {
     });
 }
 
-// function printTable(tableContent) {
-//     let output;
-//     output = table(tableContent);
-//     console.log(output);
-// }
+async function viewEmployeesByDept() {
+    const departmentArr = [];
 
+    const query = `
+    SELECT department.dept_name
+        FROM department
+            LEFT JOIN role on role.id = department.id;`;
+    connection.query(query, (err, data) => {
+        if (err) {
+            console.log(err);
+            throw err;
+        }
+        data.forEach(row => {
+            departmentArr.push(row.dept_name);
+        });
+        inquirer.prompt({
+            name: "department",
+            type: "list",
+            message: "For which department would you like to see the employee list?",
+            choices: departmentArr
+        });
+    });
 
-function viewEmployeesByDept() {
 
 }
 
@@ -214,4 +227,8 @@ function updatePrompt() {
 
 function adios() {
     console.log(chalk.red(figlet.textSync('Adios!')));
+}
+
+function queryDepartments() {
+
 }
