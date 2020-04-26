@@ -159,7 +159,7 @@ async function addRole() {
             }
         ]).then(answers => {
             let deptID;
-            const query1 = `SELECT id FROM department WHERE dept_name = ?`
+            const query1 = `SELECT id FROM department WHERE dept_name = ?`;
             connection.query(query1, [answers.department], (err, data) => {
                 if (err) {
                     console.log(err);
@@ -168,17 +168,13 @@ async function addRole() {
                 data.forEach(row => {
                     deptID = row.id;
                 });
-                console.log(deptID);
 
-                // const query2 = 
-                connection.query(`insert into role (title, salary, department_id) VALUES(?, ?, ?)`, [answers.name, answers.salary, deptID], (err, result) => {
+                const query2 = `insert into role (title, salary, department_id) VALUES(?, ?, ?)`;
+                connection.query(query2, [answers.name, answers.salary, deptID], (err, result) => {
                     if (err) {
                         console.log(err);
                         throw err;
                     }
-                    console.log({
-                        id: result.insertId
-                    });
                 });
                 actionPrompt();
             });
