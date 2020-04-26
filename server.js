@@ -7,6 +7,7 @@ const chalk = require("chalk");
 // } = require("table");
 
 const table = require("console.table");
+const util = require("util");
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -120,9 +121,71 @@ async function addDepartment() {
             console.log({
                 id: result.insertId
             });
-        })
+        });
     });
     actionPrompt();
+}
+
+async function addRole() {
+    let departmentArr = [];
+
+    const query = `
+    SELECT department.dept_name
+        FROM department
+            LEFT JOIN role on role.id = department.id;`;
+    connection.query(query, (err, data) => {
+        if (err) {
+            console.log(err);
+            throw err;
+        }
+        data.forEach(row => {
+            departmentArr.push(row.dept_name);
+        });
+        inquirer.prompt([{
+                type: "input",
+                name: "name",
+                message: "What is the name of this role?"
+            },
+            {
+                type: "input",
+                name: "salary",
+                message: "What is the salary for this role?"
+            },
+            {
+                type: "list",
+                name: "department",
+                message: "To what department does this role belong?",
+                choices: departmentArr
+            }
+        ]).then(answers => {
+            let deptID;
+            const query1 = `SELECT id FROM department WHERE dept_name = ?`
+            connection.query(query1, [answers.department], (err, data) => {
+                if (err) {
+                    console.log(err);
+                    throw err;
+                }
+                data.forEach(row => {
+                    deptID = row.id;
+                });
+                console.log(deptID);
+
+                // const query2 = 
+                connection.query(`insert into role (title, salary, department_id) VALUES(?, ?, ?)`, [answers.name, answers.salary, deptID], (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        throw err;
+                    }
+                    console.log({
+                        id: result.insertId
+                    });
+                });
+                actionPrompt();
+            });
+
+
+        });
+    });
 }
 
 function viewEmployees() {
@@ -172,9 +235,7 @@ function viewDepartments() {
             throw err;
         }
         data.forEach(row => {
-            let details = [];
-            details.push(row.dept_name);
-            departmentArr.push(details);
+            departmentArr.push(row.dept_name);
         });
 
         console.log(chalk.cyan(figlet.textSync(`\nAll Departments`, {
@@ -186,7 +247,7 @@ function viewDepartments() {
 }
 
 function viewEmployeesByDept() {
-    const departmentArr = [];
+    let departmentArr = [];
 
     const query = `
     SELECT department.dept_name
@@ -271,6 +332,30 @@ function updatePrompt() {
                 break;
         }
     });
+}
+
+// const asyncDept = util.promisify(queryDept);
+
+async function queryDept() {
+    try {
+        const departmentArr = [];
+
+        const query = `
+    SELECT department.dept_name
+        FROM department
+            LEFT JOIN role on role.id = department.id;`;
+        connection.query(query, (err, data) => {
+            if (err) {
+                console.log(err);
+                throw err;
+            }
+            data.forEach(row => {
+                departmentArr.push(row.dept_name);
+            });
+
+        });
+        return departmentArr
+    } catch {}
 }
 
 function adios() {
