@@ -2,9 +2,11 @@ const inquirer = require("inquirer");
 const mysql = require("mysql");
 const figlet = require("figlet");
 const chalk = require("chalk");
-const {
-    table
-} = require("table");
+// const {
+//     table
+// } = require("table");
+
+const table = require("console.table");
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -107,11 +109,14 @@ function addPrompt() {
 
 
 function viewEmployees() {
-    let employeeData = [
-        ["Last Name", "First Name"]
-    ];
+    let employeesArr = [];
 
-    const query = "SELECT * FROM employee";
+    const query = `
+    SELECT employee.last_name, employee.first_name, role.title, role.salary, department.dept_name
+        FROM employee
+            LEFT JOIN role ON role.id = employee.role_id
+                LEFT JOIN department ON role.department_id = department.id
+                    ORDER BY Last_name ASC;`;
     connection.query(query, (err, data) => {
         if (err) {
             console.log(err);
@@ -119,15 +124,20 @@ function viewEmployees() {
         }
         data.forEach(row => {
             let details = [];
+
             details.push(row.last_name);
             details.push(row.first_name);
-            employeeData.push(details);
+            details.push(row.title);
+            details.push(`$${row.salary}`);
+            details.push(row.dept_name);
+            employeesArr.push(details);
         });
 
         console.log(chalk.cyan(figlet.textSync(`\nAll Employees`, {
             font: "mini"
         })));
-        printTable(employeeData);
+        console.table([chalk.magenta("Last Name"), chalk.magenta("First Name"), chalk.magenta("Title"), chalk.magenta("Salary"), chalk.magenta("Department")], employeesArr);
+
         actionPrompt();
     });
 }
@@ -158,17 +168,11 @@ function viewDepartments() {
     });
 }
 
-function printTable(tableContent) {
-    let output;
-    output = table(tableContent);
-    console.log(output);
-}
-
-
-
-
-
-
+// function printTable(tableContent) {
+//     let output;
+//     output = table(tableContent);
+//     console.log(output);
+// }
 
 
 function viewEmployeesByDept() {
