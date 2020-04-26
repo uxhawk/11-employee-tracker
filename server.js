@@ -106,6 +106,25 @@ function addPrompt() {
     });
 }
 
+async function addDepartment() {
+    await inquirer.prompt({
+        type: "input",
+        name: "name",
+        message: "What is the name of the new department?"
+    }).then(answer => {
+        connection.query(`insert into department (dept_name) VALUES(?)`, answer.name, (err, result) => {
+            if (err) {
+                console.log(err);
+                throw err;
+            }
+            console.log({
+                id: result.insertId
+            });
+        })
+    });
+    actionPrompt();
+}
+
 function viewEmployees() {
     let employeesArr = [];
 
