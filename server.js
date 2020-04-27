@@ -1,9 +1,10 @@
 const inquirer = require("inquirer");
-const mysql = require("mysql");
 const figlet = require("figlet");
 const chalk = require("chalk");
-const table = require("console.table");
-const util = require("util");
+const connection = require("./lib/Connection");
+// const mysql = require("mysql");
+// const table = require("console.table");
+// const util = require("util");
 
 //classes to organize queries
 const Employee = require("./lib/Employee");
@@ -15,15 +16,7 @@ const Role = require("./lib/Role");
 const employee = new Employee();
 const manager = new Manager();
 const department = new Department();
-const Role = new Role();
-
-// const connection = mysql.createConnection({
-//     host: "localhost",
-//     port: 3306,
-//     user: "root",
-//     password: "",
-//     database: "employees_db"
-// });
+const role = new Role();
 
 connection.connect(err => {
     if (err) {
@@ -59,11 +52,12 @@ function actionPrompt() {
     }).then(answer => {
         switch (answer.action) {
             case "View All Employees":
-                viewEmployees();
+                employee.viewEmployees();
+                actionPrompt();
                 break;
 
             case "View All Employees By Department":
-                viewEmployeesByDept();
+                employee.viewEmployeesByDept();
                 break;
 
             case "View All Departments":
