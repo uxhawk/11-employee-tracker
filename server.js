@@ -11,6 +11,12 @@ const Manager = require("./lib/Manager");
 const Department = require("./lib/Department");
 const Role = require("./lib/Role");
 
+//instances of classes 
+const employee = new Employee();
+const manager = new Manager();
+const department = new Department();
+const Role = new Role();
+
 const connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
